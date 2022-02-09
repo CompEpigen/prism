@@ -80,8 +80,9 @@ def get_cpg_coordinates(read, paired=False):
             return tuple(start + i for i in character_indices(methylation_string, ['z', 'Z']))
 
     else:
-        # Flag 99 and 147 indicates reverse strand. 
-        if read.flag in [99, 147]:
+        # In SAM Flag, the 2^4 (=16) position in the binary representation of the flag number indecates whether the read is reverse or not
+        # So, we convert the read flag into binary and check the fifth decimal
+        if bin(read.flag)[-5] == "1":
             return tuple(start + i + 1 for i in character_indices(methylation_string, ['z', 'Z']))
         # Forward strand.
         else:
